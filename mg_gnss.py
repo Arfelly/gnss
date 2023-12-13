@@ -7,17 +7,17 @@ from datetime import datetime
 def leer_archivo_pos(archivo_entrada):
     with open(archivo_entrada, 'r') as entrada:
         # Leer líneas desde la línea 38
-        lineas = entrada.readlines()[37:]
-    return lineas
+        lineas_lec = entrada.readlines()[37:]
+    return lineas_lec
 
-def escribir_archivo_txt(archivo_salida, encabezado, lineas):
+def escribir_archivo_txt(archivo_salida, encabezado, lineas_lec):
     with open(archivo_salida, 'w') as salida:
         salida.write(encabezado)
-        for linea in lineas:
+        for linea in lineas_lec:
             datos = linea.split()
-            fecha = datetime.strptime(datos[0], '%Y%m%d').strftime('%d/%m/%Y')
-            nueva_linea = '\t'.join([fecha] + datos[3:])
-            salida.write(nueva_linea + '\n')
+            fecha = datetime.strftime(datos[0], '%Y%m%d')
+            nueva_columna_fecha = '\t'.join([fecha] + datos[3:])
+            salida.write(nueva_columna_fecha + '\n')
 
 def procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_pos):
     archivo_entrada = os.path.join(carpeta_archivos_pos, archivo_pos)
@@ -112,6 +112,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos):
     guardar_grafico(archivo, directorio_salida)
 
     print(f'Gráfico del archivo {archivo} generado y guardado.')
+
 
 def main():
     carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
