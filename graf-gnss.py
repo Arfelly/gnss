@@ -146,13 +146,14 @@ def cargar_datos_desde_archivo(archivos_txt):
 def calcular_promedio_movil(datos, ventana=60):
     return np.convolve(datos, np.ones(ventana) / ventana, mode='valid')
 
-def configurar_grafico(ax, fechas, datos, nombre, errores=None):
+def configurar_grafico(ax, fechas, datos, nombre, color, errores=None):
     # Utilizar la función errorbar para agregar barras de error
     if errores is not None:
         ax.errorbar(fechas, datos, 
                     yerr=errores,
                     markersize=3,
                     label=nombre,
+                    color=color,
                     capsize=5,
                     ecolor='k',
                     alpha=0.3,
@@ -213,7 +214,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos):
         fig.suptitle(f'{archivo[:-4]}', y=0.92)
 
         # Configurar gráficos con barras de error (datos de error crudos)
-        configurar_grafico(axs[0], fechas, dN, f'{archivo[:-4]} Norte', (0,0,153/255), errores=Sn)
+        configurar_grafico(axs[0], fechas, dN, f'{archivo[:-4]} Norte', (0,0,153/255), Sn)
         configurar_grafico(axs[1], fechas, dE, f'{archivo[:-4]} Este', (0,153/255,0), errores=Se)
         configurar_grafico(axs[2], fechas, dU, f'{archivo[:-4]} Vertical', (192/255,0,0), errores=Su)
 
