@@ -41,7 +41,7 @@ for archivo_pos in os.listdir(carpeta_archivos_pos):
 
         print(f'Datos del archivo {archivo_pos} procesados y guardados en {archivo_salida}')
 '''
-###
+### Procesamiento de datos GNSS
 import os
 from datetime import datetime
 
