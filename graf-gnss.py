@@ -146,9 +146,8 @@ def cargar_datos_desde_archivo(archivos_txt):
 def calcular_promedio_movil(datos, ventana=60):
     return np.convolve(datos, np.ones(ventana) / ventana, mode='valid')
 
-def configurar_grafico(ax, fechas, datos, nombre, color, errores=None):
-    # Utilizar la función errorbar para agregar barras de error
-    if errores is not None:
+def configurar_grafico(ax, fechas, datos, nombre, color, mostrar_barras_error=True, errores=None):
+    if mostrar_barras_error and errores is not None:
         ax.errorbar(fechas, datos, 
                     yerr=errores,
                     markersize=3,
@@ -156,11 +155,9 @@ def configurar_grafico(ax, fechas, datos, nombre, color, errores=None):
                     color=color,
                     capsize=5,
                     ecolor='k',
-                    alpha=0.3,
-                    #errorevery=intervalo_error  # Establecer el intervalo de visualización de las barras de error
-                    )
+                    alpha=0.3)
     else:
-        ax.scatter(fechas, datos, s=5, label=nombre)
+        ax.scatter(fechas, datos, s=5, label=nombre, color=color)
 
 def configurar_ejes_y(axs):
     y_min, y_max = -0.06, 0.06
@@ -180,9 +177,9 @@ def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
         if archivo.endswith('.txt'):
             # Leer datos desde el archivo
             ruta_archivo = os.path.join(carpeta_salida_pos, archivo)
-            fechas_archivo, _, _, _, _, _, _ = cargar_datos_desde_archivo(ruta_archivo)
+            fechas, _, _, _, _, _, _ = cargar_datos_desde_archivo(ruta_archivo)
 
-            if fechas_archivo:  # Verificar si se cargaron fechas correctamente
+            if fechas:  # Verificar si se cargaron fechas correctamente
                 # Definir el rango de fechas para el archivo actual
                 erupcion = [datetime.strptime("28/03/2022", '%d/%m/%Y'), datetime.strptime("31/03/2022", '%d/%m/%Y')]
                 aumento1 = [datetime.strptime("01/04/2022", '%d/%m/%Y'), datetime.strptime("14/01/2023", '%d/%m/%Y')]
@@ -194,7 +191,8 @@ def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
                     ax.axvspan(aumento2[0], aumento2[1], alpha=0.2, color='blue')
 
 
-def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos):
+
+def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error):
     ruta_archivo = os.path.join(carpeta_salida_pos, archivo)
     fechas, dN, dE, dU, Sn, Se, Su = cargar_datos_desde_archivo(ruta_archivo)
 
@@ -214,41 +212,39 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos):
         fig.suptitle(f'{archivo[:-4]}', y=0.92)
 
         # Configurar gráficos con barras de error (datos de error crudos)
-        configurar_grafico(axs[0], fechas, dN, f'{archivo[:-4]} Norte', (0,0,153/255), Sn)
-        configurar_grafico(axs[1], fechas, dE, f'{archivo[:-4]} Este', (0,153/255,0), errores=Se)
-        configurar_grafico(axs[2], fechas, dU, f'{archivo[:-4]} Vertical', (192/255,0,0), errores=Su)
+        configurar_grafico(axs[0], fechas, dN, f'{archivo[:-4]} Norte', (0,0,153/255), mostrar_barras_error, errores=Sn, )
+        configurar_grafico(axs[1], fechas, dE, f'{archivo[:-4]} Este', (0,153/255,0), mostrar_barras_error, errores=Se)
+        configurar_grafico(axs[2], fechas, dU, f'{archivo[:-4]} Vertical', (192/255,0,0), mostrar_barras_error, errores=Su)
 
         configurar_ejes_y(axs)
         configurar_ticks_y_formato_fecha(axs, fechas)
         dibujar_linea_punteada(axs[0], fechas, promedio_dN)
         dibujar_linea_punteada(axs[1], fechas, promedio_dE)
         dibujar_linea_punteada(axs[2], fechas, promedio_dU)
-        dibujar_rectangulos(axs, fechas, archivos_con_rectangulos)
+        dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos)
 
         # Crear el nombre del archivo de salida
         nombre_archivo_salida = f'gráfico_{nombre_carpeta_entrada}_{archivo[:-4]}.png'
         ruta_guardado = os.path.join(directorio_salida, nombre_archivo_salida)
         plt.savefig(ruta_guardado, bbox_inches='tight')
+        
         plt.close()
 
         print(f'Gráfico del archivo {archivo} generado y guardado en {ruta_guardado}.')
 
-def guardar_grafico(archivo, directorio_salida):
-    ruta_guardado = os.path.join(directorio_salida, f'gráfico_{archivo[:-4]}.png')
-    plt.savefig(ruta_guardado, bbox_inches='tight')
-    plt.close()
-
 def main():
     carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
     carpeta_salida_pos = input("Ingrese la ruta de salida de los datos procesados .pos: ")
+    respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
+    mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si'
+
+    archivos_con_rectangulos = ["ABON", "BED1", "BED2", "BED3", "BED4", "BLAN", "BVTA", "CGR2", "COC2", "CURI", "GUAN", "LARO", "MINA"]
 
     for archivo_pos in os.listdir(carpeta_archivos_pos):
         if archivo_pos.endswith('.pos'):
             procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_pos)
-            
-            archivos_con_rectangulos = ["ABON", "BED1", "BED2", "BED3", "BED4", "BLAN", "BVTA", "CGR2", "COC2", "CURI", "GUAN", "LARO", "MINA"]
-            
-            procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_pos, archivos_con_rectangulos)
+                            
+            procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error)
 
     print("Proceso completo. Gráficos y archivos TXT generados y guardados exitosamente.")
 
