@@ -79,8 +79,7 @@ def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
 def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
     for archivo in archivos_con_rectangulos:
         if archivo.endswith('.txt'):
-            # Leer datos desde el archivo
-            ruta_archivo = os.path.join(carpeta_salida_pos, archivo)
+            ruta_archivo = os.path.join(carpeta_salida_pos, f'{archivo.split(".")[0]}.txt')
             fechas, _, _, _, _, _, _ = cargar_datos_desde_archivo(ruta_archivo)
 
             if fechas:  # Verificar si se cargaron fechas correctamente
