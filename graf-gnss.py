@@ -79,7 +79,8 @@ def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
 def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
     for archivo in archivos_con_rectangulos:
         if archivo.endswith('.txt'):
-            ruta_archivo = os.path.join(carpeta_salida_pos, f'{archivo.split(".")[0]}.txt')
+            # Leer datos desde el archivo
+            ruta_archivo = os.path.join(carpeta_salida_pos, archivo)
             fechas, _, _, _, _, _, _ = cargar_datos_desde_archivo(ruta_archivo)
 
             if fechas:  # Verificar si se cargaron fechas correctamente
@@ -97,6 +98,7 @@ def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
 
 def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error):
     ruta_archivo = os.path.join(carpeta_salida_pos, archivo)
+    
     fechas, dN, dE, dU, Sn, Se, Su = cargar_datos_desde_archivo(ruta_archivo)
 
     if fechas:  # Verificar si se cargaron fechas correctamente
@@ -124,7 +126,10 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
         dibujar_linea_punteada(axs[0], fechas, promedio_dN)
         dibujar_linea_punteada(axs[1], fechas, promedio_dE)
         dibujar_linea_punteada(axs[2], fechas, promedio_dU)
-        dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos)
+
+        # Verificar si el archivo está en la lista de archivos con rectángulos
+        if archivo in archivos_con_rectangulos:
+            dibujar_rectangulos(axs, carpeta_salida_pos, [archivo])
 
         # Crear el nombre del archivo de salida
         nombre_archivo_salida = f'gráfico_{nombre_carpeta_entrada}_{archivo[:-4]}.png'
@@ -135,19 +140,20 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
 
         print(f'Gráfico del archivo {archivo} generado y guardado en {ruta_guardado}.')
 
+
 def main():
     carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
     carpeta_salida_pos = input("Ingrese la ruta de salida de los datos procesados .pos: ")
     respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
     mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si'
 
-    archivos_con_rectangulos = ["ABON.txt", "BED1", "BED2", "BED3", "BED4", "BLAN", "BVTA", "CGR2", "COC2", "CURI", "GUAN", "LARO", "MINA"]
+    
 
     for archivo_pos in os.listdir(carpeta_archivos_pos):
         if archivo_pos.endswith('.pos'):
             procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_pos)
             
-           
+            archivos_con_rectangulos = ["ABON.txt", "BED1.txt", "BED2.txt", "BED3.txt", "BED4.txt", "BLAN.txt", "BVTA.txt", "CGR2.txt", "COC2.txt", "CURI.txt", "GUAN.txt", "LARO.txt", "MINA.txt"]
             
             procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error)
 
