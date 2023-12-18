@@ -79,7 +79,6 @@ def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
 def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
     for archivo in archivos_con_rectangulos:
         if archivo.endswith('.txt'):
-            # Leer datos desde el archivo
             ruta_archivo = os.path.join(carpeta_salida_pos, archivo)
             fechas, _, _, _, _, _, _ = cargar_datos_desde_archivo(ruta_archivo)
 
@@ -142,13 +141,13 @@ def main():
     respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
     mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si'
 
-    archivos_con_rectangulos = ["ABON.txt", "BED1", "BED2", "BED3", "BED4", "BLAN", "BVTA", "CGR2", "COC2", "CURI", "GUAN", "LARO", "MINA"]
+    
 
     for archivo_pos in os.listdir(carpeta_archivos_pos):
         if archivo_pos.endswith('.pos'):
             procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_pos)
             
-           
+            archivos_con_rectangulos = ["ABON", "BED1", "BED2", "BED3", "BED4", "BLAN", "BVTA", "CGR2", "COC2", "CURI", "GUAN", "LARO", "MINA"]
             
             procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error)
 
