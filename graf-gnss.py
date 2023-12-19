@@ -62,6 +62,8 @@ def configurar_grafico(ax, fechas, datos, nombre, color, mostrar_barras_error=Tr
                     capsize=1,
                     ecolor='k',
                     alpha=0.1)
+    
+    ax.set_ylabel(nombre)
 
 def configurar_ejes_y(axs):
     y_min, y_max = -0.06, 0.06
@@ -132,7 +134,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
             dibujar_rectangulos(axs, carpeta_salida_pos, [archivo])
 
         # Crear el nombre del archivo de salida
-        nombre_archivo_salida = f'gráfico_{nombre_carpeta_entrada}_{archivo[:-4]}.png'
+        nombre_archivo_salida = f'Gráfico_{nombre_carpeta_entrada}_{archivo[:-4]}.png'
         ruta_guardado = os.path.join(directorio_salida, nombre_archivo_salida)
         plt.savefig(ruta_guardado, bbox_inches='tight')
         
@@ -143,7 +145,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
 
 def main():
     carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
-    carpeta_salida_pos = input("Ingrese la ruta de salida de los datos procesados .pos: ")
+    carpeta_salida_pos = carpeta_archivos_pos #Se quita la ruta para que todo quede en una sola carpeta
     respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
     mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si'
 
