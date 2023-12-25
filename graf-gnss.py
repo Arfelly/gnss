@@ -62,6 +62,8 @@ def configurar_grafico(ax, fechas, datos, nombre, color, mostrar_barras_error=Tr
                     capsize=1,
                     ecolor='k',
                     alpha=0.1)
+    
+    ax.set_ylabel(nombre)
 
 def configurar_ejes_y(axs):
     y_min, y_max = -0.06, 0.06
@@ -97,6 +99,7 @@ def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
 
 def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error):
     ruta_archivo = os.path.join(carpeta_salida_pos, archivo)
+    
     fechas, dN, dE, dU, Sn, Se, Su = cargar_datos_desde_archivo(ruta_archivo)
 
     if fechas:  # Verificar si se cargaron fechas correctamente
@@ -107,7 +110,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
         # Extraer el nombre de la carpeta de entrada
         nombre_carpeta_entrada = os.path.basename(os.path.normpath(carpeta_salida_pos))
 
-        carpeta_salida = f'Graficos_gnss_{nombre_carpeta_entrada}'
+        carpeta_salida = f'Graficos_GNSS_{nombre_carpeta_entrada}'
         directorio_salida = os.path.join(carpeta_salida_pos, carpeta_salida)
         os.makedirs(directorio_salida, exist_ok=True)
 
@@ -124,10 +127,13 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
         dibujar_linea_punteada(axs[0], fechas, promedio_dN)
         dibujar_linea_punteada(axs[1], fechas, promedio_dE)
         dibujar_linea_punteada(axs[2], fechas, promedio_dU)
-        dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos)
+
+        # Verificar si el archivo está en la lista de archivos con rectángulos
+        if archivo in archivos_con_rectangulos:
+            dibujar_rectangulos(axs, carpeta_salida_pos, [archivo])
 
         # Crear el nombre del archivo de salida
-        nombre_archivo_salida = f'gráfico_{nombre_carpeta_entrada}_{archivo[:-4]}.png'
+        nombre_archivo_salida = f'Gráfico_{nombre_carpeta_entrada}_{archivo[:-4]}.png'
         ruta_guardado = os.path.join(directorio_salida, nombre_archivo_salida)
         plt.savefig(ruta_guardado, bbox_inches='tight')
         
@@ -135,11 +141,12 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
 
         print(f'Gráfico del archivo {archivo} generado y guardado en {ruta_guardado}.')
 
+
 def main():
     carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
-    carpeta_salida_pos = input("Ingrese la ruta de salida de los datos procesados .pos: ")
+    carpeta_salida_pos = carpeta_archivos_pos #Se quita la ruta para que todo quede en una sola carpeta
     respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
-    mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si'
+    mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si' or respuesta_usuario == 'Sí'
 
     
 
@@ -147,11 +154,15 @@ def main():
         if archivo_pos.endswith('.pos'):
             procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_pos)
             
+<<<<<<< HEAD
             archivos_con_rectangulos = ["ABON", "BED1", "BED2", "BED3", "BED4", "BLAN", "BVTA", "CGR2", "COC2", "CURI", "GUAN", "LARO", "MINA"]
+=======
+            archivos_con_rectangulos = ["ABON.txt", "BED1.txt", "BED2.txt", "BED3.txt", "BED4.txt", "BLAN.txt", "BVTA.txt", "CGR2.txt", "COC2.txt", "CURI.txt", "GUAN.txt", "LARO.txt", "MINA.txt"]
+>>>>>>> graficar
             
             procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error)
 
-    print("Proceso completo. Gráficos y archivos TXT generados y guardados exitosamente.")
+    print(f"Proceso completo. Gráficos y archivos TXT generados y guardados exitosamente {carpeta_salida_pos}.")
 
 if __name__ == "__main__":
     main()
