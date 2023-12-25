@@ -111,7 +111,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
         # Extraer el nombre de la carpeta de entrada
         nombre_carpeta_entrada = os.path.basename(os.path.normpath(carpeta_salida_pos))
 
-        carpeta_salida = f'Graficos_gnss_{nombre_carpeta_entrada}'
+        carpeta_salida = f'Graficos_GNSS_{nombre_carpeta_entrada}'
         directorio_salida = os.path.join(carpeta_salida_pos, carpeta_salida)
         os.makedirs(directorio_salida, exist_ok=True)
 
@@ -147,7 +147,7 @@ def main():
     carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
     carpeta_salida_pos = carpeta_archivos_pos #Se quita la ruta para que todo quede en una sola carpeta
     respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
-    mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si'
+    mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si' or respuesta_usuario == 'Sí'
 
     
 
@@ -159,7 +159,7 @@ def main():
             
             procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error)
 
-    print("Proceso completo. Gráficos y archivos TXT generados y guardados exitosamente.")
+    print(f"Proceso completo. Gráficos y archivos TXT generados y guardados exitosamente {carpeta_salida_pos}.")
 
 if __name__ == "__main__":
     main()
