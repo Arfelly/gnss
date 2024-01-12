@@ -63,7 +63,7 @@ def configurar_grafico(ax, fechas, datos, nombre, color, mostrar_barras_error=Tr
                     ecolor='k',
                     alpha=0.1)
     
-    ax.set_ylabel(nombre)
+    ax.set_ylabel(nombre, fontsize=18) ## Cambia el tamaño del eje Y
 
 def configurar_ejes_y(axs):
     y_min, y_max = -0.06, 0.06
@@ -74,8 +74,9 @@ def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=200):
     for ax in axs:
         ax.set_xticks(fechas[::ticks_cada_n])
         ax.xaxis.set_major_formatter(DateFormatter('%b-%Y'))
+        ax.xaxis.set_tick_params(labelsize=12) ## Cambio de tamaño del eje X
 
-def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
+def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3): ##Cambiar alpha para la transparencia de la linea punteada
     ax.plot(fechas, [np.nan]*59 + promedio_movil.tolist(), 'k--', alpha=alpha)
 
 def dibujar_rectangulos(axs, carpeta_salida_pos, archivos_con_rectangulos):
@@ -115,10 +116,10 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
         os.makedirs(directorio_salida, exist_ok=True)
 
         fig, axs = plt.subplots(3, 1, figsize=(10, 12), sharex=False)
-        fig.suptitle(f'{archivo[:-4]}', y=0.92)
+        fig.suptitle(f'{archivo[:-4]}', y=0.92, fontsize=26) #Cambio de tamaño de titulo
 
         # Configurar gráficos con barras de error (datos de error crudos)
-        configurar_grafico(axs[0], fechas, dN, f'{archivo[:-4]} Norte', (0,0,153/255), mostrar_barras_error, errores=Sn, )
+        configurar_grafico(axs[0], fechas, dN, f'{archivo[:-4]} Norte', (0,0,153/255), mostrar_barras_error, errores=Sn)
         configurar_grafico(axs[1], fechas, dE, f'{archivo[:-4]} Este', (0,153/255,0), mostrar_barras_error, errores=Se)
         configurar_grafico(axs[2], fechas, dU, f'{archivo[:-4]} Vertical', (192/255,0,0), mostrar_barras_error, errores=Su)
 
@@ -154,11 +155,7 @@ def main():
         if archivo_pos.endswith('.pos'):
             procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_pos)
             
-<<<<<<< HEAD
             archivos_con_rectangulos = ["ABON", "BED1", "BED2", "BED3", "BED4", "BLAN", "BVTA", "CGR2", "COC2", "CURI", "GUAN", "LARO", "MINA"]
-=======
-            archivos_con_rectangulos = ["ABON.txt", "BED1.txt", "BED2.txt", "BED3.txt", "BED4.txt", "BLAN.txt", "BVTA.txt", "CGR2.txt", "COC2.txt", "CURI.txt", "GUAN.txt", "LARO.txt", "MINA.txt"]
->>>>>>> graficar
             
             procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_pos, archivos_con_rectangulos, mostrar_barras_error)
 
