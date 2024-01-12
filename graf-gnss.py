@@ -164,3 +164,4 @@ def main():
 if __name__ == "__main__":
     main()
 
+##Elaborado por Arfelly Donato Caro, actualizaciones en el repo https://github.com/Arfelly/gnss, comicarse a arfelly23@gmail.com
