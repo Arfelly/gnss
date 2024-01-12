@@ -1,3 +1,8 @@
+#Elaborado por Arfelly Donato Caro, actualizaciones en el repo https://github.com/Arfelly/gnss, contacto:arfelly23@gmail.com
+#Fecha 12 de enero de 2024 V1.1
+
+'''Lector y graficador de archivos .pos'''
+
 import os
 import matplotlib.pyplot as plt
 import numpy as np
@@ -144,6 +149,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
 
 
 def main():
+    print('Lector y graficador de archivos .pos')
     carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
     carpeta_salida_pos = carpeta_archivos_pos #Se quita la ruta para que todo quede en una sola carpeta
     respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
@@ -163,5 +169,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-##Elaborado por Arfelly Donato Caro, actualizaciones en el repo https://github.com/Arfelly/gnss, comicarse a arfelly23@gmail.com
