@@ -8,6 +8,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.dates import DateFormatter
 from datetime import datetime
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
+
+root = tk.Tk()
+root.withdraw()
 
 def leer_archivo_pos(archivo_entrada):
     with open(archivo_entrada, 'r') as entrada:
@@ -150,12 +156,11 @@ def procesar_archivo_txt(archivo, carpeta_salida_pos, archivos_con_rectangulos, 
 
 def main():
     print('Lector y graficador de archivos .pos')
-    carpeta_archivos_pos = input("Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
+    carpeta_archivos_pos = filedialog.askdirectory(title="Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
     carpeta_salida_pos = carpeta_archivos_pos #Se quita la ruta para que todo quede en una sola carpeta
-    respuesta_usuario = input("¿Desea agregar barras de error? (Sí/No): ").lower()
-    mostrar_barras_error = respuesta_usuario == 'sí' or respuesta_usuario == 'si' or respuesta_usuario == 'Sí'
-
-    
+    respuesta_usuario = messagebox.askyesno(title="barras de error", message="Graficar con barras de error")
+    #respuesta_usuario = input("barras de error: ").lower()
+    mostrar_barras_error = respuesta_usuario 
 
     for archivo_pos in os.listdir(carpeta_archivos_pos):
         if archivo_pos.endswith('.pos'):
