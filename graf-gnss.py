@@ -104,7 +104,7 @@ def dibujar_rectangulos(axs, fechas, carpeta_salida, archivos_con_rectangulos):
                     for ax in axs:
                         ax.axvspan(inicio_dt, fin_dt, alpha=alpha, color=color)
 
-def procesar_archivo_txt(archivo, carpeta_salida_txt, carpeta_salida_graficos, archivos_con_rectangulos, mostrar_barras_error):
+def procesar_archivo_txt(archivo, carpeta_salida_txt, nombre_carpeta_entrada, carpeta_salida_graficos, archivos_con_rectangulos, mostrar_barras_error):
     ruta_archivo = os.path.join(carpeta_salida_txt, archivo)
     
     fechas, dN, dE, dU, Sn, Se, Su = cargar_datos_desde_archivo(ruta_archivo)
@@ -114,7 +114,6 @@ def procesar_archivo_txt(archivo, carpeta_salida_txt, carpeta_salida_graficos, a
         promedio_dE = calcular_promedio_movil(dE)
         promedio_dU = calcular_promedio_movil(dU)
 
-        nombre_carpeta_entrada = os.path.basename(os.path.normpath(carpeta_salida_txt))
         directorio_graficos = os.path.join(carpeta_salida_graficos, f'Graficos_GNSS_{nombre_carpeta_entrada}')
         os.makedirs(directorio_graficos, exist_ok=True)
 
@@ -145,13 +144,14 @@ def procesar_archivo_txt(archivo, carpeta_salida_txt, carpeta_salida_graficos, a
 def main():
     print('Lector y graficador de archivos .pos')
     carpeta_archivos_pos = filedialog.askdirectory(title="Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
-
-    carpeta_salida_txt = os.path.join(carpeta_archivos_pos, 'Archivos_GNSS')
+    
+    nombre_carpeta_entrada = os.path.basename(os.path.normpath(carpeta_archivos_pos))
+    carpeta_salida_txt = os.path.join(carpeta_archivos_pos, f'Archivos_GNSS_{nombre_carpeta_entrada}')
     carpeta_salida_graficos = carpeta_archivos_pos
 
     os.makedirs(carpeta_salida_txt, exist_ok=True)
 
-    respuesta_usuario = messagebox.askyesno(title="barras de error", message="¿Graficar con barras de error?")
+    respuesta_usuario = messagebox.askyesno(title="Barras de error", message="¿Graficar con barras de error?")
     mostrar_barras_error = respuesta_usuario 
 
     archivos_con_rectangulos = ["ABON.txt", "BED1.txt", "BED2.txt", "BED3.txt", "BED4.txt", "BLAN.txt", "BVTA.txt", "CGR2.txt", "COC2.txt", "CURI.txt", "GUAN.txt", "LARO.txt", "MINA.txt"]
@@ -159,11 +159,12 @@ def main():
     for archivo_pos in os.listdir(carpeta_archivos_pos):
         if archivo_pos.endswith('.pos'):
             procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_txt)
-            procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_txt, carpeta_salida_graficos, archivos_con_rectangulos, mostrar_barras_error)
+            procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_txt, nombre_carpeta_entrada, carpeta_salida_graficos, archivos_con_rectangulos, mostrar_barras_error)
 
-    messagebox.showinfo(title="Proceso completo",message=("Los gráficos y archivos .txt se han generado y guardado en:\n\n"f"{carpeta_archivos_pos}\n\n"))
+    messagebox.showinfo(title="Proceso completo", message=f"Los gráficos y archivos .txt se han generado y guardado en:\n\n{carpeta_archivos_pos}\n\n")
     root.quit()
 
 if __name__ == "__main__":
     main()
+
 
