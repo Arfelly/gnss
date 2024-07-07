@@ -145,6 +145,7 @@ def procesar_archivo_txt(archivo, carpeta_salida_txt, carpeta_salida_graficos, a
 def main():
     print('Lector y graficador de archivos .pos')
     carpeta_archivos_pos = filedialog.askdirectory(title="Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
+
     carpeta_salida_txt = os.path.join(carpeta_archivos_pos, 'Archivos_GNSS')
     carpeta_salida_graficos = carpeta_archivos_pos
 
@@ -160,7 +161,8 @@ def main():
             procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_txt)
             procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_txt, carpeta_salida_graficos, archivos_con_rectangulos, mostrar_barras_error)
 
-    print(f"Proceso completo. Gráficos y archivos TXT generados y guardados exitosamente en {carpeta_archivos_pos}.")
+    messagebox.showinfo(title="Proceso completo",message=("Los gráficos y archivos .txt se han generado y guardado en:\n\n"f"{carpeta_archivos_pos}\n\n"))
+    root.quit()
 
 if __name__ == "__main__":
     main()
