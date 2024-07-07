@@ -5,7 +5,6 @@
 
 import os
 import matplotlib.pyplot as plt
-import numpy as np
 from matplotlib.dates import DateFormatter
 from datetime import datetime
 import tkinter as tk
@@ -60,7 +59,10 @@ def cargar_datos_desde_archivo(ruta_archivo):
     return fechas, dN, dE, dU, Sn, Se, Su
 
 def calcular_promedio_movil(datos, ventana=60):
-    return np.convolve(datos, np.ones(ventana) / ventana, mode='valid')
+    promedio_movil = []
+    for i in range(len(datos) - ventana + 1):
+        promedio_movil.append(sum(datos[i:i + ventana]) / ventana)
+    return promedio_movil
 
 def configurar_grafico(ax, fechas, datos, titulo, color, mostrar_barras_error=True, errores=None):
     ax.scatter(fechas, datos, s=5, label=titulo, color=color)
@@ -82,7 +84,9 @@ def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=200):
         ax.xaxis.set_tick_params(labelsize=12)
 
 def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
-    ax.plot(fechas, [np.nan]*59 + promedio_movil.tolist(), 'k--', alpha=alpha)
+    nan_list = [float('nan')] * 59
+    promedio_movil_list = nan_list + promedio_movil
+    ax.plot(fechas, promedio_movil_list, 'k--', alpha=alpha)
 
 def dibujar_rectangulos(axs, fechas, carpeta_salida, archivos_con_rectangulos):
     for archivo in archivos_con_rectangulos:
@@ -160,3 +164,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
