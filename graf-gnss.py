@@ -150,7 +150,7 @@ def main():
 
     os.makedirs(carpeta_salida_txt, exist_ok=True)
 
-    respuesta_usuario = messagebox.askyesno(title="barras de error", message="Graficar con barras de error")
+    respuesta_usuario = messagebox.askyesno(title="barras de error", message="¿Graficar con barras de error?")
     mostrar_barras_error = respuesta_usuario 
 
     archivos_con_rectangulos = ["ABON.txt", "BED1.txt", "BED2.txt", "BED3.txt", "BED4.txt", "BLAN.txt", "BVTA.txt", "CGR2.txt", "COC2.txt", "CURI.txt", "GUAN.txt", "LARO.txt", "MINA.txt"]
