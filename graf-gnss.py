@@ -8,8 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 from datetime import datetime
 import tkinter as tk
-from tkinter import filedialog
-from tkinter import messagebox
+from tkinter import ttk, filedialog, messagebox
 
 root = tk.Tk()
 root.withdraw()
@@ -144,7 +143,6 @@ def procesar_archivo_txt(archivo, carpeta_salida_txt, nombre_carpeta_entrada, ca
 def main():
     print('Lector y graficador de archivos .pos')
     carpeta_archivos_pos = filedialog.askdirectory(title="Ingrese la ruta de los datos GNSS .pos (GEORED, POPASILP O SOAM): ")
-    
     nombre_carpeta_entrada = os.path.basename(os.path.normpath(carpeta_archivos_pos))
     carpeta_salida_txt = os.path.join(carpeta_archivos_pos, f'Archivos_GNSS_{nombre_carpeta_entrada}')
     carpeta_salida_graficos = carpeta_archivos_pos
@@ -156,13 +154,31 @@ def main():
 
     archivos_con_rectangulos = ["ABON.txt", "BED1.txt", "BED2.txt", "BED3.txt", "BED4.txt", "BLAN.txt", "BVTA.txt", "CGR2.txt", "COC2.txt", "CURI.txt", "GUAN.txt", "LARO.txt", "MINA.txt"]
 
-    for archivo_pos in os.listdir(carpeta_archivos_pos):
-        if archivo_pos.endswith('.pos'):
-            procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_txt)
-            procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_txt, nombre_carpeta_entrada, carpeta_salida_graficos, archivos_con_rectangulos, mostrar_barras_error)
+    archivos_pos = [archivo for archivo in os.listdir(carpeta_archivos_pos) if archivo.endswith('.pos')]
+
+    progress = tk.Toplevel()
+    progress.title("Progreso")
+    progress.geometry("300x100")
+
+    tk.Label(progress, text="Procesando archivos...").pack(pady=10)
+    barra_progreso = ttk.Progressbar(progress, orient="horizontal", length=250, mode="determinate")
+    barra_progreso.pack(pady=10)
+    barra_progreso["maximum"] = len(archivos_pos)
+
+    root.update()
+
+    for i, archivo_pos in enumerate(archivos_pos):
+        procesar_archivo_pos(archivo_pos, carpeta_archivos_pos, carpeta_salida_txt)
+        procesar_archivo_txt(archivo_pos.split(".")[0] + ".txt", carpeta_salida_txt, nombre_carpeta_entrada, carpeta_salida_graficos, archivos_con_rectangulos, mostrar_barras_error)
+        barra_progreso["value"] = i + 1
+        root.update_idletasks()
+
+    progress.destroy()
 
     messagebox.showinfo(title="Proceso completo", message=f"Los gráficos y archivos .txt se han generado y guardado en:\n\n{carpeta_archivos_pos}\n\n")
-    root.quit()
+
+    root.destroy()
+    
 
 if __name__ == "__main__":
     main()
