@@ -76,7 +76,7 @@ def configurar_ejes_y(axs):
     for ax in axs:
         ax.set_ylim(y_min, y_max)
 
-def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=200):
+def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=170):
     for ax in axs:
         ax.set_xticks(fechas[::ticks_cada_n])
         ax.xaxis.set_major_formatter(DateFormatter('%b-%Y'))
