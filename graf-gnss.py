@@ -82,10 +82,14 @@ def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=170):
         ax.xaxis.set_major_formatter(DateFormatter('%b-%Y'))
         ax.xaxis.set_tick_params(labelsize=12)
 
+# def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
+#    nan_list = [float('nan')] * 59
+#    promedio_movil_list = nan_list + promedio_movil
+#    ax.plot(fechas, promedio_movil_list, 'k--', alpha=alpha)
+
 def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
-    nan_list = [float('nan')] * 59
-    promedio_movil_list = nan_list + promedio_movil
-    ax.plot(fechas, promedio_movil_list, 'k--', alpha=alpha)
+    fechas_recortadas = fechas[len(fechas) - len(promedio_movil):]  # Recortar las fechas para que coincidan
+    ax.plot(fechas_recortadas, promedio_movil, 'k--', alpha=alpha)
 
 def dibujar_rectangulos(axs, fechas, carpeta_salida, archivos_con_rectangulos):
     for archivo in archivos_con_rectangulos:
