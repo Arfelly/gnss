@@ -1,5 +1,5 @@
 #Elaborado por Arfelly Donato Caro, actualizaciones en el repo https://github.com/Arfelly/gnss, contacto:arfelly23@gmail.com
-#Fecha 06 de julio de 2024 V1.2
+#Fecha 12 de mayo de 2025 V1.1.1.1
 
 '''Lector y graficador de archivos .pos'''
 
@@ -16,7 +16,9 @@ root.withdraw()
 HEADER = "Fecha\tX\tY\tZ\tSx\tSy\tSz\tRxy\tRxz\tRyz\tNLat\tElong\tHeight\tdN\tdE\tdU\tSn\tSe\tSu\tRne\tRnu\tReu\tSoln\n"
 RECTANGLE_DATES = [
     ("28/03/2022", "31/03/2022", 0.4, 'red'),
-    ("01/04/2022", "14/01/2023", 0.2, 'green')
+    ("01/04/2022", "14/01/2023", 0.2, 'green'),
+    ("15/01/2023", "18/01/2025", 0,2, 'blue'),
+    ("19/01/2025", "21/01/2025", 0,4, 'red')
 ]
 
 def leer_archivo_pos(ruta_entrada):
@@ -76,11 +78,11 @@ def configurar_ejes_y(axs):
     for ax in axs:
         ax.set_ylim(y_min, y_max)
 
-def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=170):
+def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=150):
     for ax in axs:
         ax.set_xticks(fechas[::ticks_cada_n])
-        ax.xaxis.set_major_formatter(DateFormatter('%b-%Y'))
-        ax.xaxis.set_tick_params(labelsize=12)
+        ax.xaxis.set_major_formatter(DateFormatter('%m-%Y'))
+        ax.xaxis.set_tick_params(labelsize=10)
 
 # def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
 #    nan_list = [float('nan')] * 59
@@ -99,7 +101,7 @@ def dibujar_rectangulos(axs, fechas, carpeta_salida, archivos_con_rectangulos):
 
             if fechas_archivo:
                 fecha_final = fechas_archivo[-1].strftime('%d/%m/%Y')
-                rect_dates = RECTANGLE_DATES + [("15/01/2023", fecha_final, 0.2, 'blue')]
+                rect_dates = RECTANGLE_DATES + [("22/01/2025", fecha_final, 0.2, 'gray')]
 
                 for inicio, fin, alpha, color in rect_dates:
                     inicio_dt = datetime.strptime(inicio, '%d/%m/%Y')
