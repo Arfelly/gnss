@@ -1,5 +1,5 @@
 #Elaborado por Arfelly Donato Caro, actualizaciones en el repo https://github.com/Arfelly/gnss, contacto:arfelly23@gmail.com
-#Fecha 12 de mayo de 2025 V1.1.1.1
+#Fecha 12 de mayo de 2025 V1.1.1.2
 
 '''Lector y graficador de archivos .pos'''
 
@@ -17,8 +17,8 @@ HEADER = "Fecha\tX\tY\tZ\tSx\tSy\tSz\tRxy\tRxz\tRyz\tNLat\tElong\tHeight\tdN\tdE
 RECTANGLE_DATES = [
     ("28/03/2022", "31/03/2022", 0.4, 'red'),
     ("01/04/2022", "14/01/2023", 0.2, 'green'),
-    ("15/01/2023", "18/01/2025", 0,2, 'blue'),
-    ("19/01/2025", "21/01/2025", 0,4, 'red')
+    ("15/01/2023", "18/01/2025", 0.2, 'blue'),
+    ("19/01/2025", "21/01/2025", 0.4, 'red')
 ]
 
 def leer_archivo_pos(ruta_entrada):
@@ -84,14 +84,10 @@ def configurar_ticks_y_formato_fecha(axs, fechas, ticks_cada_n=150):
         ax.xaxis.set_major_formatter(DateFormatter('%m-%Y'))
         ax.xaxis.set_tick_params(labelsize=10)
 
-# def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
-#    nan_list = [float('nan')] * 59
-#    promedio_movil_list = nan_list + promedio_movil
-#    ax.plot(fechas, promedio_movil_list, 'k--', alpha=alpha)
-
 def dibujar_linea_punteada(ax, fechas, promedio_movil, alpha=0.3):
-    fechas_recortadas = fechas[len(fechas) - len(promedio_movil):]  # Recortar las fechas para que coincidan
-    ax.plot(fechas_recortadas, promedio_movil, 'k--', alpha=alpha)
+    nan_list = [float('nan')] * 59
+    promedio_movil_list = nan_list + promedio_movil
+    ax.plot(fechas, promedio_movil_list, 'k--', alpha=alpha)
 
 def dibujar_rectangulos(axs, fechas, carpeta_salida, archivos_con_rectangulos):
     for archivo in archivos_con_rectangulos:
@@ -188,5 +184,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
